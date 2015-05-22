@@ -1,0 +1,41 @@
+<!DOCTYPE html>  
+<html lang="en">
+<head>
+    <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="/main.js"></script>
+
+<body>
+<div class="container">
+	<div class="row">
+	  <div class="col-md-4">
+	  <h2>PPL</h2>
+	      <ul id="people" class="unstyled"></ul>
+	  </div>
+	  <div class="col-md-8">
+	  <h2>MSGS</h2>
+	      <ul id="msgs" class="unstyled"></ul>
+	  </div>
+	</div>
+	<div class="row">
+	    <div class="col-md-6" id="login">
+	        <form class="form-inline">
+	              <input type="text" class="input-small" placeholder="Your name" id="name">
+	            <input type="button" name="join" id="join" value="Join" class="btn btn-primary">
+	        </form>
+	    </div>
+
+	    <div class="col-md-6" id="chat">
+	        <form id="2" class="form-inline">
+	              <input type="text" class="input" placeholder="Your message" id="msg">
+	            <input type="button" name="send" id="send" value="Send" class="btn btn-success">
+	        </form>
+	    </div>
+	  </div>
+	</div>
+</div>
+
+</body>
+</html>

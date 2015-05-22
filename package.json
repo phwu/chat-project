@@ -1,0 +1,11 @@
+{
+  "name": "Asapp",
+  "version": "0.0.0",
+  "description": "project submmission",
+  "main": "app.js",
+  "author": "polly hwu",
+  "dependencies": {
+    "express": "^4.10.2",
+    "socket.io": "^1.3.5"
+  }
+}
