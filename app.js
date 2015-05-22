@@ -2,11 +2,13 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+// routes
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
 
+// chat server
 var rooms = [];
 
 io.on('connection', function(socket) {
@@ -19,14 +21,15 @@ io.on('connection', function(socket) {
 		if(rooms.length == 0) {
 			rooms.push(name);
 		} else {
-			rooms.forEach(function(room) {
-				if(room != name)
-					rooms.push(name);
-			});
+			if(rooms.indexOf(name) < 0) {
+				rooms.push(name);
+			}
 		}
 		socket.join(name);
-		socket.emit('room joined', name);
-	});
+		// let the client know they have joined the room
+		socket.emit('system msg', 'You have joined ' + name + '.');
+	}); // a thought .. how do we know when to remove a room ? socket.io automatically destroys the room when the last user has left ...
+
 
 	socket.on('get rooms', function() {
 		console.log('get rooms');
@@ -45,12 +48,14 @@ io.on('connection', function(socket) {
 	});
 
 	// if a socket disconnects from the server
-	socket.on('disconnect', function() {
+/*	socket.on('disconnect', function() {
 		console.log('user disconnected');
 		socket.emit('system msg', 'User has disconnected');
 	});
+*/
 })
 
+// let's listen
 http.listen(3000, function(){
   console.log('listening on *:3000');
 });

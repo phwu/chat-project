@@ -41,9 +41,10 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
+      // create a socket
       var socket = io();
 
-      // keeps chat formatted on screen since separate lists
+      // some handy dandy variables
       var name = '';
       var mg = '';
       var room = '';
@@ -59,7 +60,7 @@
         return false;
       })
 
-      // create a room based on username
+      // create a room based on username, client assumes if you create a room, you're going to join it
       function createRoom() {
         socket.emit('create room', name);
         room = name;
@@ -67,11 +68,7 @@
         $('#chat button').prop('disabled', false);
       };
 
-      socket.on('room joined', function(name) {
-        console.log('joined room - ' + name);
-      });
-
-      // show available rooms
+      // show available rooms.... this could be helpful for operators
       socket.on('rooms list', function(rooms) {
         $('#options').find('#room-count').text(rooms.length);
         
@@ -83,10 +80,15 @@
       });
 
       // now we can join rooms
-      function joinRoom(room) { 
-        console.log(room);
+      function joinRoom(rm) { 
+        // basically same as creating a room, cept we pass a room name rather than using the user's name
+        socket.emit('create room', rm);
+        room = rm;
+        $('#options li').addClass('disabled');
+        $('#chat button').prop('disabled', false);
       };
-            
+      
+      // we always want to send the message to clients in the same room
       $('#chat').submit(function() {
         mg = $('#m').val();
         var data = {
@@ -94,10 +96,12 @@
           mg: mg,
           room: room
         };
+        // this will ensure only sockets connected in the same room get the message
         socket.emit('message to room', data);
         // go ahead and propagate message to screen since it's from your client anyways!
         $('#names').append($('<li>').text(data.name));
         $('#messages').append($('<li>').text(data.mg));
+        // reset the message boxx
         $('#m').val('');
         return false;
       });
@@ -108,15 +112,12 @@
         $('#messages').append($('<li>').text(data.mg));
       });
 
+      // messages pushed from the server, can be used to send alerts from server side ...
       socket.on('system msg', function(msg) {
-        $('#names').append($('<li class="text-uppercase">').text('&&&&&&'));
+        $('#names').append($('<li class="text-uppercase">').text('*****'));
         $('#messages').append($('<li>').text(msg));
       });
             
-      socket.on('chat message', function(msg) {
-        $('#names').append($('<li class="text-uppercase">').text(msg.name));
-        $('#messages').append($('<li>').text(msg.mg));
-      });
     </script>
   </body>
 </html>
