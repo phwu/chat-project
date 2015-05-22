@@ -1,0 +1,9 @@
+To dos (no particular order):
+# persist chat messages
+# fetch old chat messages (how should I display?)
+# how to remove empty rooms (owner is gone and room is destroyed but how can i update the array?)
+# ability to leave rooms and join others
+# ui pretty
+# authenticate the user
+# support for pics ?
+# clean up code obviously
