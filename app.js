@@ -128,7 +128,6 @@ io.on('connection', function(socket) {
 			}
 		}
 		socket.join(name);
-		console.log("Socket joined");
 		// let the client know they have joined the room
 		socket.emit('system msg', 'You have joined ' + name + '.');
 	}); // a thought .. how do we know when to remove a room ? socket.io automatically destroys the room when the last user has left ...

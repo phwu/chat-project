@@ -1,6 +1,6 @@
 To dos (no particular order):
 x persist chat messages
-# fetch old chat messages (how should I display?)
+x fetch old chat messages (how should I display?)
 # how to remove empty rooms (owner is gone and room is destroyed but how can i update the array?)
 # ability to leave rooms and join others
 # ui pretty
@@ -8,4 +8,4 @@ x persist chat messages
 # support for pics ?
 x clean up code obviously
 # validate messages being sent (Sanitize, check for XSS)
-# time stamps instead of dates
+x time stamps instead of dates

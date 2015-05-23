@@ -27,6 +27,11 @@ $(function(){
 	    $('#oldmessages li').removeClass('disabled');
 	    socket.emit('get rooms', {});
 	    
+	    // bind on click
+		$('#createroom').click(function() {
+			createRoom();
+		});
+
 	    return false;
 	});
 
@@ -54,20 +59,23 @@ $(function(){
 		socket.emit('create room', name);
 		room = name;
 		$('#options li').addClass('disabled');
+		$('#createroom').prop('onclick',null).off('click');
+	    $('#joinrooms li').each(function() {
+	    	$(this).find('a').prop('onclick',null).off('click');
+	    });
 		$('#chat button').prop('disabled', false);
 	};
-	// bind on click
-	$('#createroom').click(function() {
-		createRoom();
-	});
+	
 
 	// show available rooms.... this could be helpful for operators
 	socket.on('rooms list', function(rooms) {
 		if(rooms.length > 0) {
 			$('#joinrooms').find('#room-count').text(rooms.length);
 	    	rooms.forEach(function(room) {
-	    		// add to lists and bind the function
-	        	$('#joinrooms').append($('<li>').append($('<a href="#">').text(room))).click(function() {
+	    		// add to lists and bind the function .. this one was a doosey since it's dynamic
+	    		var link = '<li><a href="#">'+room+'</a></li>';
+	        	$('#joinrooms').append(link);
+	        	$('#joinrooms li:last-child').find('a').click(function(){
 	        		joinRoom(room);
 	        	});
 	    	});
@@ -80,6 +88,10 @@ $(function(){
 	    socket.emit('create room', rm);
 	    room = rm;
 	    $('#options li').addClass('disabled');
+	    $('#createroom').prop('onclick',null).off('click');
+	    $('#joinrooms li').each(function() {
+	    	$(this).find('a').prop('onclick',null).off('click');
+	    });
 	    $('#chat button').prop('disabled', false);
 	};
 
@@ -157,6 +169,7 @@ $(function(){
 	// fetch old messages
 	function fetchOldMgs(name) {
 		socket.emit('fetch old messages', name);
+		$('#oldmessages li').find('a').prop('onclick',null).off('click');
 		$('#oldmessages li').addClass('disabled');
 	};
 	$('#oldmessages').find('a').click(function() {
