@@ -91,10 +91,12 @@
       // we always want to send the message to clients in the same room
       $('#chat').submit(function() {
         mg = $('#m').val();
+        var date = new Date();
         var data = {
           name: name,
           mg: mg,
-          room: room
+          room: room,
+          date: date
         };
         // this will ensure only sockets connected in the same room get the message
         socket.emit('message to room', data);

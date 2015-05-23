@@ -1,6 +1,38 @@
+var config = require('./config/main')
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
+
+// db uri
+var dburi = 'mongodb://'+config.db.user+':'+config.db.pw+'@'+config.db.host+':'+config.db.port+'/'+config.db.db;
+
+// establish connection and pushes message to db
+var pushMessage = function(data) {
+	console.log('pushing message');
+	MongoClient.connect(dburi, function(err, db) {
+		assert.equal(null, err);
+		if (err) {
+			console.loog("unable to connect to db");
+		} else {
+			console.log("Connected to the db");
+			insertMessage(db, data);
+		}
+	});
+
+	// setups what collection the doc is inserted in
+	var insertMessage = function(db, doc) {
+		var messagesCollection = db.collection('messageLogs');
+		// insert docs into the collection
+		messagesCollection.insert(doc, function(err, result) {
+			assert.equal(err, null);
+			//callback(result);
+			db.close();		// we need to wait for the doc to insert before closing the connection
+		});
+	};
+};
+
 
 // routes
 app.get('/', function(req, res){
@@ -32,20 +64,15 @@ io.on('connection', function(socket) {
 
 
 	socket.on('get rooms', function() {
-		console.log('get rooms');
 		socket.emit('rooms list', rooms);
-		console.log('sending rooms ' + rooms);
 	});
 
 	socket.on('message to room', function(data) {
 		socket.to(data.room).emit('convo', data);
+		// push message to db
+		pushMessage(data);
 	});
 
-	socket.on('chat message', function(msg) {
-		console.log('name:' + msg.name);
-		console.log('message:' + msg.mg);
-		io.emit('chat message', msg);
-	});
 
 	// if a socket disconnects from the server
 /*	socket.on('disconnect', function() {
